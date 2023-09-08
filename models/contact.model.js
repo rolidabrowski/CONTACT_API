@@ -6,7 +6,6 @@ const contactSchema = new Schema(
   {
     name: {
       type: String,
-      match: nameRegexp,
       required: [true, "Set name for contact"],
     },
     email: {
@@ -15,7 +14,6 @@ const contactSchema = new Schema(
     },
     phone: {
       type: String,
-      match: phoneRegexp,
       required: [true, "Set phone for contact"],
     },
     favorite: {
@@ -32,3 +30,5 @@ const contactSchema = new Schema(
 );
 
 export const contactModel = mongoose.model("Contact", contactSchema);
+
+export default contactModel;

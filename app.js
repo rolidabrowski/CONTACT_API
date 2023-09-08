@@ -12,13 +12,13 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/contacts", contactsRouter);
 app.use("/api/user", userRouter);
+app.use("/api/contacts", contactsRouter);
 
 app.get("/", (req, res) => {
   return res.status(200).json({
     status: true,
-    message: "Hello World",
+    message: "Welocome to API",
   });
 });
 

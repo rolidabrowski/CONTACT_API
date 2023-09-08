@@ -5,7 +5,7 @@ const contactAddSchema = Joi.object({
   email: Joi.string().email().required(),
   phone: Joi.string().min(6).required(),
   favorite: Joi.boolean().default(false),
-  owner: Joi.types.ObjectId().ref("user").required(),
+  owner: Joi.ref("user"),
   versionKey: false,
   timestamp: true,
 });
@@ -15,13 +15,13 @@ const contactUpdateSchema = Joi.object({
   email: Joi.string().email().optional(),
   phone: Joi.string().min(6).optional(),
   favorite: Joi.boolean().optional(),
-  owner: Joi.types.ObjectId().ref("user"),
+  owner: Joi.ref("user"),
   versionKey: false,
   timestamp: true,
 });
 
 export const addContactValidation = async (req, res, next) => {
-  const contactPayLoad = req.body;
+  const { contactPayLoad } = req.body;
   try {
     await contactAddSchema.validateAsync(contactPayLoad);
     next();
@@ -34,7 +34,7 @@ export const addContactValidation = async (req, res, next) => {
 };
 
 export const updateContactValidation = async (req, res, next) => {
-  const contactPayLoad = req.body;
+  const { contactPayLoad } = req.body;
   try {
     await contactUpdateSchema.validateAsync(contactPayLoad);
     next();
