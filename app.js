@@ -2,6 +2,7 @@ import express from "express";
 import logger from "morgan";
 import cors from "cors";
 import { contactsRouter } from "./routes/contact.routes.js";
+import { userRouter } from "./routes/user.routes.js";
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/contacts", contactsRouter);
+app.use("/api/user", userRouter);
 
 app.get("/", (req, res) => {
   return res.status(200).json({

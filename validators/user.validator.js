@@ -1,8 +1,8 @@
 import Joi from "joi";
 
-export const userAddSchema = Joi.object({
-  username: Joi.string().alphanum().min(3).max(30).required().unique(),
-  email: Joi.string().email().required().unique(),
+const userAddSchema = Joi.object({
+  username: Joi.string().alphanum().min(3).max(30).required(),
+  email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
   subscription: Joi.string().default("starter"),
   token: Joi.string().default(""),
@@ -20,5 +20,3 @@ export const addUserValidation = async (req, res, next) => {
     });
   }
 };
-
-export default addUserValidation;

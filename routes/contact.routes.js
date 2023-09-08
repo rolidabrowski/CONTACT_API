@@ -1,5 +1,3 @@
 import { Router } from "express";
 
-const contactsRouter = Router();
-
-export { contactsRouter };
+export const contactsRouter = Router();

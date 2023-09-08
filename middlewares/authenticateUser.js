@@ -2,7 +2,7 @@ import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config.js";
 
-const authenticateUser = async (req, res, next) => {
+export const authenticateUser = async (req, res, next) => {
   try {
     const authorization = req.headers.authorization;
     if (!authorization) {
@@ -24,5 +24,3 @@ const authenticateUser = async (req, res, next) => {
     next(error);
   }
 };
-
-export default authenticateUser;

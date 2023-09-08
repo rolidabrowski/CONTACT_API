@@ -1,4 +1,4 @@
-const errorHandler = (error, req, res, next) => {
+export const errorHandler = (error, req, res, next) => {
   if (error.message === "data and hash arguments required") {
     return res.status(403).json({
       status: false,
@@ -20,5 +20,3 @@ const errorHandler = (error, req, res, next) => {
 
   next();
 };
-
-export default errorHandler;

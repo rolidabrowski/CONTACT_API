@@ -36,17 +36,16 @@ const userSchema = new Schema(
 
 userSchema.pre("save", async function (next) {
   const user = this;
-  const salt = await bcrypt.genSalt(10);
-  const hash = await bcrypt.hash(this.password, salt);
+  const hash = await bcrypt.hash(user.password, 10);
   this.password = hash;
   next();
 });
 
-userSchema.methods.isValidPassword = async function (password) {
+userSchema.method("isValidPassword", async function (password) {
   const user = this;
   const compare = await bcrypt.compare(password, user.password);
   return compare;
-};
+});
 
 const userModel = mongoose.model("User", userSchema);
 

@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-export const contactAddSchema = Joi.object({
+const contactAddSchema = Joi.object({
   name: Joi.string().alphanum().min(3).max(30).required(),
   email: Joi.string().email().required(),
   phone: Joi.string().min(6).required(),
@@ -10,7 +10,7 @@ export const contactAddSchema = Joi.object({
   timestamp: true,
 });
 
-export const contactUpdateSchema = Joi.object({
+const contactUpdateSchema = Joi.object({
   name: Joi.string().alphanum().min(3).max(30).optional(),
   email: Joi.string().email().optional(),
   phone: Joi.string().min(6).optional(),
@@ -20,7 +20,7 @@ export const contactUpdateSchema = Joi.object({
   timestamp: true,
 });
 
-const addContactValidation = async (req, res, next) => {
+export const addContactValidation = async (req, res, next) => {
   const contactPayLoad = req.body;
   try {
     await contactAddSchema.validateAsync(contactPayLoad);
@@ -33,7 +33,7 @@ const addContactValidation = async (req, res, next) => {
   }
 };
 
-const updateContactValidation = async (req, res, next) => {
+export const updateContactValidation = async (req, res, next) => {
   const contactPayLoad = req.body;
   try {
     await contactUpdateSchema.validateAsync(contactPayLoad);
@@ -45,5 +45,3 @@ const updateContactValidation = async (req, res, next) => {
     });
   }
 };
-
-export default { addContactValidation, updateContactValidation };
