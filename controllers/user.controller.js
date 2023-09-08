@@ -5,7 +5,7 @@ import User from "../models/user.model.js";
 export const signup = async (req, res, next) => {
   try {
     const body = req.body;
-    const { email, username, subscription } = body;
+    const { email, username } = body;
 
     const user = await User.findOne({ email });
 
@@ -42,7 +42,10 @@ export const login = async (req, res, next) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Incorrect login or password" });
+      return res.status(400).json({
+        status: false,
+        message: "Incorrect login or password",
+      });
     }
 
     const user = await User.findOne({ email });
@@ -73,6 +76,7 @@ export const login = async (req, res, next) => {
 
     const token = jwt.sign(body, JWT_SECRET, { expiresIn: validityPeroid });
 
+    await User.findByIdAndUpdate(user._id, { token });
     res.status(200).json({
       message: "Login successful",
       token,
@@ -81,6 +85,49 @@ export const login = async (req, res, next) => {
         subscription: user.subscription,
       },
     });
+  } catch (error) {
+    console.log(error.message);
+    next(error);
+  }
+};
+
+export const logout = async (req, res, next) => {
+  try {
+    const id = req.user._id;
+    await User.findByIdAndUpdate(id, { token: "" });
+    res.status(204).json({
+      status: true,
+      message: "Logout success",
+    });
+  } catch (error) {
+    console.log(error.message);
+    next(error);
+  }
+};
+
+export const currentUser = async (req, res) => {
+  const { email, subscription } = req.user;
+  res.status(200).json({
+    status: true,
+    email,
+    subscription,
+  });
+};
+
+export const updateUserSubscription = async (req, res, next) => {
+  try {
+    const body = req.body;
+    const id = req.user._id;
+    const user = await User.findByIdAndUpdate(id, body, {
+      new: true,
+    });
+    if (!user) {
+      return res.status(404).json({
+        status: false,
+        message: "Not Found",
+      });
+    }
+    return res.status(200).json(user);
   } catch (error) {
     console.log(error.message);
     next(error);
