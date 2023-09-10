@@ -51,7 +51,7 @@ export const login = async (req, res, next) => {
     if (!email || !password) {
       return res.status(400).json({
         status: false,
-        message: "Incorrect login or password",
+        message: "Missing required fields",
       });
     }
 
@@ -69,7 +69,7 @@ export const login = async (req, res, next) => {
     if (!passwordIsValid) {
       return res.status(401).json({
         status: false,
-        message: "Email or password is incorrect",
+        message: "Password is incorrect",
       });
     }
 
@@ -104,7 +104,6 @@ export const logout = async (req, res, next) => {
     await User.findByIdAndUpdate(id, { token: "" });
     res.status(204).json({
       status: true,
-      message: "Logout success",
     });
   } catch (error) {
     console.log(error.message);
