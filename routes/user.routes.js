@@ -6,8 +6,10 @@ import {
   logout,
   currentUser,
   updateUserSubscription,
+  updateUserAvatar,
 } from "../controllers/user.controller.js";
 import { authenticateUser } from "../middlewares/authenticateUser.js";
+import { uploadUserAvatar } from "../middlewares/uploadUserAvatar.js";
 
 export const userRouter = Router();
 
@@ -20,3 +22,10 @@ userRouter.post("/logout", authenticateUser, logout);
 userRouter.get("/current", authenticateUser, currentUser);
 
 userRouter.patch("/users", authenticateUser, updateUserSubscription);
+
+userRouter.post(
+  "/avatars",
+  authenticateUser,
+  uploadUserAvatar,
+  updateUserAvatar
+);
