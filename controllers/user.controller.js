@@ -11,7 +11,7 @@ const uploadDir = path.join(process.cwd(), "public/data/uploads");
 export const signup = async (req, res, next) => {
   try {
     const body = req.body;
-    const { email, username } = body;
+    const { email } = body;
 
     const user = await User.findOne({ email });
 
@@ -22,14 +22,6 @@ export const signup = async (req, res, next) => {
       });
     }
 
-    const user2 = await User.findOne({ username });
-
-    if (user2) {
-      return res.status(409).json({
-        status: false,
-        message: "User with this username already exists",
-      });
-    }
     const avatarUrl = gravatar.url(email);
     const newUser = await User.create(body);
     return res.status(201).json({
