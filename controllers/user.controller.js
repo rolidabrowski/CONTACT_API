@@ -23,7 +23,7 @@ export const signup = async (req, res, next) => {
     }
 
     const avatarUrl = gravatar.url(email);
-    const newUser = await User.create(body);
+    const newUser = await User.create({ ...body, avatarUrl });
     return res.status(201).json({
       status: true,
       email: newUser.email,
