@@ -23,7 +23,7 @@ userRouter.get("/current", authenticateUser, currentUser);
 
 userRouter.patch("/users", authenticateUser, updateUserSubscription);
 
-userRouter.post(
+userRouter.patch(
   "/avatars",
   authenticateUser,
   uploadUserAvatar,
