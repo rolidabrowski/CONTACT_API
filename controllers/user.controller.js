@@ -1,6 +1,12 @@
 import jwt from "jsonwebtoken";
+import gravatar from "gravatar";
+import fs from "fs/promises";
+import path from "path";
+import Jimp from "jimp";
 import { JWT_SECRET } from "../config/config.js";
 import User from "../models/user.model.js";
+
+const uploadDir = path.join(process.cwd(), "public/data/uploads");
 
 export const signup = async (req, res, next) => {
   try {
@@ -16,11 +22,15 @@ export const signup = async (req, res, next) => {
       });
     }
 
-    const newUser = await User.create(body);
+
+    const avatarUrl = gravatar.url(email);
+    const newUser = await User.create({ ...body, avatarUrl });
+
     return res.status(201).json({
       status: true,
       email: newUser.email,
       subscription: newUser.subscription,
+      avatarUrl,
     });
   } catch (error) {
     console.log(error.message);
@@ -35,7 +45,7 @@ export const login = async (req, res, next) => {
     if (!email || !password) {
       return res.status(400).json({
         status: false,
-        message: "Incorrect login or password",
+        message: "Missing required fields",
       });
     }
 
@@ -53,7 +63,7 @@ export const login = async (req, res, next) => {
     if (!passwordIsValid) {
       return res.status(401).json({
         status: false,
-        message: "Email or password is incorrect",
+        message: "Password is incorrect",
       });
     }
 
@@ -88,7 +98,6 @@ export const logout = async (req, res, next) => {
     await User.findByIdAndUpdate(id, { token: "" });
     res.status(204).json({
       status: true,
-      message: "Logout success",
     });
   } catch (error) {
     console.log(error.message);
@@ -123,4 +132,33 @@ export const updateUserSubscription = async (req, res, next) => {
     console.log(error.message);
     next(error);
   }
+};
+
+export const updateUserAvatar = async (req, res, next) => {
+  if (!req.file) {
+    return res.status(400).json({
+      status: false,
+      message: "No file uploaded",
+    });
+  }
+
+  const id = req.user._id;
+  const { path: tempName, originalname } = req.file;
+
+  await Jimp.read(tempName)
+    .then((avatar) => {
+      return avatar.resize(250, 250).quality(60).write(tempName);
+    })
+    .catch((error) => {
+      throw error;
+    });
+
+  const fileName = `${id}_${originalname}`;
+  const uplodedFile = path.join(uploadDir, fileName);
+  await fs.rename(tempName, uplodedFile);
+  const avatarUrl = path.join("avatars", fileName);
+  await User.findByIdAndUpdate(id, { avatarUrl });
+  res.status(200).json({
+    avatarUrl,
+  });
 };
