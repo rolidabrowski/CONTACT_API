@@ -84,6 +84,7 @@ export const resendVerify = async (req, res, next) => {
         message: "User Not Found",
       });
     }
+
     if (user.verify)
       return res.status(400).json({
         status: false,
@@ -112,6 +113,13 @@ export const login = async (req, res, next) => {
     }
 
     const user = await User.findOne({ email });
+
+    if (!user.verify) {
+      return res.status(401).json({
+        status: false,
+        message: "Email is not verified",
+      });
+    }
 
     if (!user) {
       return res.status(401).json({
