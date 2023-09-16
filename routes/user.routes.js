@@ -1,7 +1,13 @@
 import { Router } from "express";
-import { addUserValidation } from "../validators/user.validator.js";
+import {
+  validateUser,
+  validateLogin,
+  validateVerifyUser,
+} from "../validators/user.validator.js";
 import {
   login,
+  verify,
+  resendVerify,
   signup,
   logout,
   currentUser,
@@ -13,9 +19,13 @@ import { uploadUserAvatar } from "../middlewares/uploadUserAvatar.js";
 
 export const userRouter = Router();
 
-userRouter.post("/signup", addUserValidation, signup);
+userRouter.post("/signup", validateUser, signup);
 
-userRouter.post("/login", login);
+userRouter.get("/verify/:verificationToken", verify);
+
+userRouter.post("/verify", validateVerifyUser, resendVerify);
+
+userRouter.post("/login", validateLogin, login);
 
 userRouter.post("/logout", authenticateUser, logout);
 

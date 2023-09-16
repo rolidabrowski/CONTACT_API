@@ -3,12 +3,14 @@ import bcrypt from "bcrypt";
 
 const Schema = mongoose.Schema;
 
+const emailRegexp = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 const subscriptionList = ["starter", "pro", "business"];
 
 const userSchema = new Schema(
   {
     email: {
       type: String,
+      match: emailRegexp,
       required: [true, "Email is required"],
       unique: true,
     },
@@ -28,6 +30,14 @@ const userSchema = new Schema(
     avatarUrl: {
       type: String,
       required: true,
+    },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, "Verify token is required"],
     },
   },
   { versionKey: false, timestamps: true }
